@@ -12,18 +12,22 @@ if [ -z "${LOGS}" ] ; then
     exit 1
 fi
 
-
-if [ -z "${LOGSET}" ] ; then
-    LOGSET="DemoSet"
+if [ -z "${HOST_NAME}" ] ; then
+    HOST_NAME=`hostname -s`
 fi
 
-
-le register --account-key=${ACCOUNT_KEY}
+if [ -z "${HOST_KEY}" ] ; then
+    echo "HOST_KEY is not set. Generating new..."
+    le register --account-key=${ACCOUNT_KEY} --name=${HOST_NAME}
+    le whoami
+else
+    le register --account-key=${ACCOUNT_KEY} --name=${HOST_NAME} --host-key=${HOST_KEY}
+fi
 
 if [ -z "${LOGTYPE}" ] ; then
-    le follow --name=${LOGSET} ${LOGS}
+    le follow ${LOGS}
 else
-    le follow --name=${LOGSET} --type=${LOGTYPE} ${LOGS}
+    le follow --type=${LOGTYPE} ${LOGS}
 fi
 
 /sbin/service logentries start
