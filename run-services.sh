@@ -21,7 +21,7 @@ if [ -z "${HOST_KEY}" ] ; then
     le register --account-key=${ACCOUNT_KEY} --name=${HOST_NAME}
     le whoami
 else
-    le register --account-key=${ACCOUNT_KEY} --name=${HOST_NAME} --host-key=${HOST_KEY}
+    le register --account-key=${ACCOUNT_KEY} --name=${HOST_NAME} --host-key=${HOST_KEY} --force
 fi
 
 if [ -z "${LOGTYPE}" ] ; then
