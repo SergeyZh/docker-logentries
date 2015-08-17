@@ -18,7 +18,7 @@ fi
 
 if [ -z "${HOST_KEY}" ] ; then
     echo "HOST_KEY is not set. Generating new..."
-    le register --account-key=${ACCOUNT_KEY} --name=${HOST_NAME}
+    le register --account-key=${ACCOUNT_KEY} --name=${HOST_NAME} --pull-server-side-config=False
     le whoami
 else
     le register --account-key=${ACCOUNT_KEY} --name=${HOST_NAME} --host-key=${HOST_KEY} --force --pull-server-side-config=False
