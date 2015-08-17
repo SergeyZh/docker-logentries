@@ -7,28 +7,31 @@ if [ -z "${ACCOUNT_KEY}" ] ; then
     exit 1
 fi
 
-if [ -z "${LOGS}" ] ; then
-    echo "You need to set LOGS env variable"
-    exit 1
-fi
 
-if [ -z "${HOST_NAME}" ] ; then
-    HOST_NAME=`hostname -s`
+if [ -z "${SERVICE_NAME}" ] ; then
+    SERVICE_NAME=`hostname -s`
 fi
 
 if [ -z "${HOST_KEY}" ] ; then
     echo "HOST_KEY is not set. Generating new..."
-    le register --account-key=${ACCOUNT_KEY} --name=${HOST_NAME} --pull-server-side-config=False
+    le register --account-key=${ACCOUNT_KEY} --name=${SERVICE_NAME}
     le whoami
+    if [ -z "${LOGS}" ] ; then
+	echo "You need to set LOGS env variable"
+	exit 1
+    fi
+    if [ -z "${LOGTYPE}" ] ; then
+	le follow ${LOGS}
+    else
+	le follow --type=${LOGTYPE} ${LOGS}
+    fi
+    
+    echo "Write down your host key. Exiting..."
+    exit 1
 else
-    le register --account-key=${ACCOUNT_KEY} --name=${HOST_NAME} --host-key=${HOST_KEY} --force --pull-server-side-config=False
+    le --account-key=${ACCOUNT_KEY} --host-key=${HOST_KEY} init
 fi
 
-if [ -z "${LOGTYPE}" ] ; then
-    le follow ${LOGS}
-else
-    le follow --type=${LOGTYPE} ${LOGS}
-fi
 
 /sbin/service logentries start
 
