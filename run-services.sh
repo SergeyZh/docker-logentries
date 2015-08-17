@@ -17,12 +17,14 @@ if [ -z "${LOGSET}" ] ; then
     LOGSET="DemoSet"
 fi
 
-if [ -z "${LOGTYPE}" ] ; then
-    LOGSET="le:access"
-fi
 
 le register --account-key=${ACCOUNT_KEY}
-le follow --name=${LOGSET} --type=${LOGTYPE} ${LOGS}
+
+if [ -z "${LOGTYPE}" ] ; then
+    le follow --name=${LOGSET} ${LOGS}
+else
+    le follow --name=${LOGSET} --type=${LOGTYPE} ${LOGS}
+fi
 
 /sbin/service logentries start
 
